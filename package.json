@@ -1,0 +1,42 @@
+{
+  "name": "material-ui-vite-ts",
+  "private": true,
+  "version": "5.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc && vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@emotion/react": "latest",
+    "@emotion/styled": "latest",
+    "@mui/icons-material": "next",
+    "@mui/material": "next",
+    "@turf/turf": "^7.0.0",
+    "http-proxy-middleware": "^3.0.0",
+    "leaflet": "^1.9.4",
+    "proj4": "^2.11.0",
+    "proj4leaflet": "^1.0.2",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-leaflet": "^4.2.1",
+    "react-leaflet-markercluster": "^3.0.0-rc1"
+  },
+  "devDependencies": {
+    "@types/babel__core": "^7.20.5",
+    "@types/estree": "^1.0.5",
+    "@types/geojson": "^7946.0.14",
+    "@types/leaflet": "^1.9.12",
+    "@types/leaflet.markercluster": "^1.5.4",
+    "@types/parse-json": "^4.0.2",
+    "@types/proj4": "^2.5.5",
+    "@types/prop-types": "^15.7.12",
+    "@types/react": "latest",
+    "@types/react-dom": "latest",
+    "@vitejs/plugin-react": "latest",
+    "typescript": "latest",
+    "vite": "latest"
+  },
+  "proxy": "https://data.gov.il"
+}
