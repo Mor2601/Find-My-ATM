@@ -7,10 +7,18 @@ import {
   useMap,
   useMapEvents,
   LayerGroup,
+  ScaleControl,
+  AttributionControl,
+  ZoomControl,
+  FeatureGroup,
 } from "react-leaflet";
+// import { EditControl } from "react-leaflet-draw";
+import MarkerClusterGroup from "react-leaflet-cluster";
 import L, { marker, LatLngBoundsLiteral, LatLng } from "leaflet";
-import HomeIcon from '@mui/icons-material/Home';
+import HomeIcon from "@mui/icons-material/Home";
 import { ATM } from "./../../types";
+import { IconButton } from "@mui/material";
+import { SvgIcon } from "@mui/material";
 
 interface MapProps {
   atmsList: ATM[];
@@ -74,8 +82,10 @@ export const ATMsMap = ({ atmsList }: { atmsList: ATM[] }) => {
           (atm) =>
             atm.X_Coordinate !== null &&
             atm.Y_Coordinate !== null &&
-            atm.X_Coordinate >= 29.5 && atm.X_Coordinate <= 33.5 &&
-            atm.Y_Coordinate >= 34.25 && atm.Y_Coordinate <= 35.9 &&
+            atm.X_Coordinate >= 29.5 &&
+            atm.X_Coordinate <= 33.5 &&
+            atm.Y_Coordinate >= 34.25 &&
+            atm.Y_Coordinate <= 35.9 &&
             bounds[0][0] <= atm.X_Coordinate &&
             atm.X_Coordinate <= bounds[1][0] &&
             bounds[0][1] <= atm.Y_Coordinate &&
@@ -118,86 +128,17 @@ export const ATMsMap = ({ atmsList }: { atmsList: ATM[] }) => {
 //     </Marker>
 //   );
 // };
-// const withdrawalIcon = new L.Icon({
-//     iconUrl: './location-orange.png',
-//     iconSize: [28, 28],
-//   });
-//   const informationIcon = new L.Icon({
-//     iconUrl: './location-blue.png',
-//     iconSize: [28, 28],
-//   });
-// const MarkerCluster = ({ atmsList }: { atmsList: ATM[] }) => {
-//   const map = useMap();
-//   const markerClusterGroupRef = useRef<L.MarkerClusterGroup | null>(null);
-
-//   useEffect(() => {
-//     if (markerClusterGroupRef.current) {
-//       map.removeLayer(markerClusterGroupRef.current);
-//     }
-
-//     const markers = atmsList.map((atm) => {
-//       if (atm.X_Coordinate !== null && atm.Y_Coordinate !== null) {
-//         // Check if coordinates are within the expected ranges for Israel
-
-//         if (atm.X_Coordinate >= 29.5 && atm.X_Coordinate <= 33.5 && atm.Y_Coordinate >= 34.25 && atm.Y_Coordinate <= 35.9) {
-//           const marker = L.marker([atm.X_Coordinate, atm.Y_Coordinate]);
-//           marker.setIcon(atm.ATM_Type === 'משיכת מזומן' ? withdrawalIcon : informationIcon);
-//           marker.bindPopup(`${atm.Bank_Name} - ${atm.X_Coordinate} ${atm.Y_Coordinate}, ID: ${atm._id}, Address: ${atm.ATM_Address}`);
-
-//           return marker;
-//         }
-//       } else {
-//         console.error(`Invalid coordinates for ATM: ${atm._id}`);
-//       }
-//       return null;
-//     }).filter((marker): marker is L.Marker => marker !== null);
-
-//     // const markerLayerGroup = L.layerGroup(markers);
-//     // map.addLayer(markerLayerGroup);
-//     markerClusterGroupRef.current = L.markerClusterGroup();
-//     markerClusterGroupRef.current.addLayers(markers);
-//     map.addLayer(markerClusterGroupRef.current);
-
-//     return () => {
-//       if (markerClusterGroupRef.current) {
-//         map.removeLayer(markerClusterGroupRef.current);
-//       }
-//     };
-//   }, [atmsList, map]);
-
-//   return null;
-// };
-
-const Map: React.FC<MapProps> = ({ atmsList }) => {
-  const withdrawalIcon = useMemo(
-    () =>
-      new L.Icon({
-        iconUrl: "./orange-pinned.png",
-        iconSize: [28, 28],
-      }),
-    []
-  );
-
-  const informationIcon = useMemo(
-    () =>
-      new L.Icon({
-        iconUrl: "./blue-pinned..png",
-        iconSize: [28, 28],
-      }),
-    []
-  );
-
-  const bounds: LatLngBoundsLiteral = useMemo(
-    () => [
-      [29.5, 34.25], // Southwest corner
-      [33.5, 35.9], // Northeast corner
-    ],
-    []
-  );
-
-  const markers = useMemo(
-    () =>
-      atmsList
+const withdrawalIcon = new L.Icon({
+    iconUrl: './orange-pinned.png',
+    iconSize: [28, 28],
+  });
+  const informationIcon = new L.Icon({
+    iconUrl: './blue-pinned.png',
+    iconSize: [28, 28],
+  });
+  export const MarkerCluster = ({ atmsList }: { atmsList: ATM[] }) => {
+    const markers = useMemo(() => {
+      return atmsList
         .filter(
           (atm) =>
             atm.X_Coordinate !== null &&
@@ -211,17 +152,69 @@ const Map: React.FC<MapProps> = ({ atmsList }) => {
           <Marker
             key={atm._id}
             position={[atm.X_Coordinate, atm.Y_Coordinate]}
-            icon={
-              atm.ATM_Type === "משיכת מזומן" ? withdrawalIcon : informationIcon
-            }
+            icon={atm.ATM_Type === 'משיכת מזומן' ? withdrawalIcon : informationIcon}
           >
             <Popup>
-              {`${atm.Bank_Name} - ${atm.X_Coordinate} ${atm.Y_Coordinate}, ID: ${atm._id}, Address: ${atm.ATM_Address}`}
+              {`${atm.Bank_Name} -  City Name: ${atm.City}, Address: ${atm.ATM_Address} atmType: ${atm.ATM_Type}`}
             </Popup>
           </Marker>
-        )),
-    [atmsList, withdrawalIcon, informationIcon]
-  );
+        ));
+    }, [atmsList]);
+  
+    return (
+      <MarkerClusterGroup>
+        {markers}
+      </MarkerClusterGroup>
+    );
+  };
+
+export const CustomZoomControl = () => {
+  const map = useMap();
+
+  useEffect(() => {
+    // Access the existing zoom control container
+    const zoomControlContainer = map.zoomControl.getContainer();
+
+    // Add custom button with HomeIcon
+    const customButton = L.DomUtil.create(
+      "a",
+      "leaflet-control-custom-button",
+      zoomControlContainer
+    );
+    customButton.title = "Home";
+    customButton.style.display = "flex";
+    customButton.style.alignItems = "center";
+    customButton.style.justifyContent = "center";
+    const iconElement = document.createElement("div");
+    iconElement.style.width = "24px";
+    iconElement.style.height = "24px";
+    iconElement.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" width="24px" height="24px"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>`;
+    customButton.appendChild(iconElement);
+    if (zoomControlContainer) {
+      // Safe to use zoomControlContainer here
+      zoomControlContainer.insertBefore(customButton, zoomControlContainer.firstChild);;
+    } else {
+      console.error("zoomControlContainer is undefined");
+    }
+
+    L.DomEvent.on(customButton, "click", () => {
+      alert("Custom button clicked!");
+      // Add your custom functionality here
+    });
+
+    return () => {
+      // Remove the custom button when the component is unmounted
+      if (customButton.parentNode) {
+        customButton.parentNode.removeChild(customButton);
+      }
+    };
+  }, [map]);
+
+  return null;
+};
+
+const Map: React.FC<MapProps> = ({ atmsList }) => {
+
 
   return (
     <MapContainer
@@ -231,14 +224,46 @@ const Map: React.FC<MapProps> = ({ atmsList }) => {
       // bounds={bounds}
       // maxBounds={bounds}
       // maxBoundsViscosity={1.0}
+      
+      
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <LocationMarker />
+
+      <CustomZoomControl />
+    <MarkerCluster atmsList={atmsList}/>
       {/* <ATMsMap atmsList={atmsList}/> */}
-      {/* {markers} */}
+      
+      {/* <MarkerClusterGroup>
+        {atmsList
+        .filter(
+          (atm) =>
+            atm.X_Coordinate !== null &&
+            atm.Y_Coordinate !== null &&
+            atm.X_Coordinate >= 29.5 &&
+            atm.X_Coordinate <= 33.5 &&
+            atm.Y_Coordinate >= 34.25 &&
+            atm.Y_Coordinate <= 35.9
+        )
+        .map((atm) =>(
+          <Marker
+            key={atm._id}
+            position={[atm.X_Coordinate, atm.Y_Coordinate]}
+            icon={
+              atm.ATM_Type === "משיכת מזומן" ? withdrawalIcon : informationIcon
+            }
+          >
+            <Popup>
+              {`${atm.Bank_Name} - ${atm.X_Coordinate} ${atm.Y_Coordinate}, ID: ${atm._id}, Address: ${atm.ATM_Address}`}
+            </Popup>
+          </Marker>
+        ))
+          }
+      </MarkerClusterGroup> */}
+     
     </MapContainer>
   );
 };

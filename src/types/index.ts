@@ -17,8 +17,8 @@ export interface ATM {
   
 
   export interface FilterOptions {
-    atmTypes: Array<'משיכת מזומן' | 'מכשיר מידע/ואו מתן הוראות'>;
-    bankNames: Array<string>;
+    ATM_Type: string;
+    Bank_Name:string;
   }
   
 
@@ -38,4 +38,11 @@ export interface ATM {
   export interface MapBounds {
     northEast: Geolocation;
     southWest: Geolocation;
+  }
+  export interface RequestBody {
+    resource_id: string;
+    q?: string;
+    limit?: number;
+    offset?: number;
+    filters?: FilterOptions;
   }

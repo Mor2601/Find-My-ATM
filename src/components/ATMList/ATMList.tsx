@@ -22,7 +22,7 @@ const ATMList: React.FC<ATMListProps> = ({ atms }) => {
           <ListItem key={index} >
                 <ListItemText
                   primary={atm.Bank_Name}
-                  secondary={`${atm.ATM_Address} - ${atm.ATM_Type}`}
+                  secondary={`${atm.ATM_Address} - ${atm.ATM_Type}, ${atm.City}`}
                 sx={{textAlign:"right"}}                
                 />
                 

@@ -5,6 +5,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import OutlinedInput from "@mui/material/OutlinedInput";
+
 interface FiltersProps {
   selectionOptions: string[];
   selectedOption: string;
@@ -28,14 +29,14 @@ const Filters: React.FC<FiltersProps> = ({
   return (
     <Box sx={sx}>
       <FormControl fullWidth >
-        <InputLabel id={labelId} sx={{color:"black"}}>{label}</InputLabel>
+        <InputLabel id={labelId} >{label}</InputLabel>
         <Select
           labelId={labelId}
           id={id}
           value={selectedOption}
           label={label}
           onChange={onSelectionChange}
-          sx={{color:"black"}}
+          
           
         >
           

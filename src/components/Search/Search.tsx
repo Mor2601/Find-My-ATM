@@ -12,7 +12,7 @@ const Search: React.FC<SearchProps> = ({ search, handleSearch }) => {
     <TextField
       id="outlined-basic"
       sx={{marginTop:"10px"}}
-      
+      label="חיפוש לפי עיר"
       variant="outlined"
       fullWidth
       value={search}
@@ -22,11 +22,12 @@ const Search: React.FC<SearchProps> = ({ search, handleSearch }) => {
         input: {
           endAdornment: (
             <InputAdornment position="end">
-              <InputLabel sx={{paddingRight:"4px"}}>חיפוש לפי עיר</InputLabel>
+              
               <SearchRoundedIcon sx={{color:"black"}} />
             </InputAdornment>
           ),
         },
+       
       }}
     />
   );
