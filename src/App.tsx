@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useCallback } from "react";
+import React, { useEffect, useState, useCallback, useRef } from "react";
 import Grid from "@mui/material/Grid";
 import Divider from "@mui/material/Divider";
 import Paper from "@mui/material/Paper";
@@ -13,7 +13,7 @@ import Map from "./components/Map/Map";
 import CircularProgress from '@mui/material/CircularProgress';
 import { Box } from "@mui/material";
 
-const PAGE_SIZE = 100;
+const PAGE_SIZE = 50;
 
 export default function App() {
   const [atms, setAtms] = useState<ATM[]>([]);
@@ -26,10 +26,11 @@ export default function App() {
   const [hasPrevious, setHasPrevious] = useState<boolean>(false);
   const [atm, setAtm] = useState<ATM | null>(null);
   const [isQueryHaveCity, setIsQueryHaveCity] = useState<boolean>(false);
-
+  const paperRef = useRef<HTMLDivElement>(null);
   const debouncedSearch = useDebounce(search, 500);
 
   const fetchMapAndATMListData = useCallback(async () => {
+    paperRef.current?.scrollTo(0, 0);
     setLoading(true);
     try {
       const filters: Partial<FilterOptions> = {};
@@ -148,7 +149,7 @@ export default function App() {
                      label="כל סוגי הבנקטים"
                      labelId="status-select-bank-type"
                      id="select-bank-type"
-                     selectedOption={selectedBankType}
+                     selectedOption={selectedBankType?selectedBankType:"כל סוגי הבנקטים"}
                      selectionOptions={[
                        "משיכת מזומן",
                        "מכשיר מידע/או מתן הוראות",
@@ -162,7 +163,7 @@ export default function App() {
                      label="כל הבנקים"
                      labelId="status-select-bank-name"
                      id="select-bank-name"
-                     selectedOption={selectedBank}
+                     selectedOption={selectedBank?selectedBank:"כל הבנקים"}
                      selectionOptions={[
                        'בנק אוצר החייל בע"מ',
                        'בנק דיסקונט לישראל בע"מ',
@@ -180,6 +181,7 @@ export default function App() {
                item
                sx={{ height: "calc(100vh - 150px)", overflowY: "auto" }}
                onScroll={handleScroll}
+                ref={paperRef}
              >
                <Paper>
                  <ATMList atms={atmForAtmList} handleAtmClick={handleAtmClick} />

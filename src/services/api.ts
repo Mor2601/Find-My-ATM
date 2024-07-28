@@ -29,12 +29,13 @@ export const fetchData = async (
   if (filters) {
     const validFilters: Partial<FilterOptions> = {};
     if (filters.ATM_Type) validFilters.ATM_Type = filters.ATM_Type;
-    if (filters.Bank_Name) validFilters.Bank_Name = filters.Bank_Name;
-    if (Object.keys(validFilters).length > 0) {
-      requestBody.filters = validFilters as FilterOptions;
+    if (filters.Bank_Name) {
+      validFilters.Bank_Name = filters.Bank_Name;
     } else {
-      requestBody.filters = { Bank_Name: defaultBankNames };
+      validFilters.Bank_Name = defaultBankNames;
     }
+
+    requestBody.filters = validFilters as FilterOptions;
   } else {
     requestBody.filters = { Bank_Name: defaultBankNames };
   }

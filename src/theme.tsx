@@ -30,7 +30,10 @@ const theme = createTheme({
           flex-direction: column;
           overflow: hidden;
         }
+        
       `,
+      
+
     },
   },
 });

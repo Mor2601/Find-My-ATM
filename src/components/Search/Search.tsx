@@ -7,7 +7,7 @@ interface SearchProps {
   search: string;
   handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
-
+//TODO: Add RTL support to the search component but that lable and input will be RTL
 const Search: React.FC<SearchProps> = ({ search, handleSearch }) => {
   const [value, setValue] = useState<string>(search);
   const [isHebrewNotValid, setIsHebrewNotValid] = useState<boolean>(false);
