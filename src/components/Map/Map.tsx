@@ -16,6 +16,7 @@ import MarkerCluster from "../MarkerCluster/MarkerCluster";
 import CustomZoomControl from "../CustomZoomControl/CustomZoomControl";
 import FoucsedMapOnAtm from "../FoucsedMapOnAtm/FoucsedMapOnAtm";
 import FoucsedMap from "../FoucsedMap/FoucsedMap";
+import { Box, CircularProgress } from "@mui/material";
 interface MapProps {
   atmsList: ATM[];
   atm: ATM | null;
@@ -31,19 +32,19 @@ const Map: React.FC<MapProps> = ({ atmsList, atm,setAtm,isCityFouced }) => {
       center={[31.5, 34.75]}
       zoom={8}
       style={{ height: "100vh", width: "100%" }}
+      
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
        
       />
-      
       {/* {atm? (<FoucsedMapOnAtm atm={atm}/>):(<FoucsedMap atmsList={atmsList}/>)} */}
       {atm ? <FoucsedMapOnAtm atm={atm} setAtm={setAtm} /> : <MarkerCluster atmsList={atmsList} />}
       <CustomZoomControl />
       {/* {isCityFouced ? <FoucsedMap atmsList={atmsList}  />:null} */}
       
-      <FoucsedMap atmsList={atmsList} />
+      <FoucsedMap atmsList={atmsList} isCityFouced={isCityFouced} />
       {/* <MarkerCluster atmsList={atmsList} /> */}
     </MapContainer>
   );

@@ -10,7 +10,8 @@ import Filters from "./components/Filters/Filters";
 import ATMList from "./components/ATMList/ATMList";
 import useDebounce from "./hooks/useDebounce";
 import Map from "./components/Map/Map";
-import { set } from "lodash";
+import CircularProgress from '@mui/material/CircularProgress';
+import { Box } from "@mui/material";
 
 const PAGE_SIZE = 100;
 
@@ -58,6 +59,11 @@ export default function App() {
   }, [debouncedSearch, selectedBank, selectedBankType]);
 
   useEffect(() => {
+    if(debouncedSearch.length>0){
+      setIsQueryHaveCity(true);
+    }else{
+      setIsQueryHaveCity(false);
+    }
     fetchMapAndATMListData();
   }, [debouncedSearch, selectedBank, selectedBankType]);
 
@@ -100,11 +106,7 @@ export default function App() {
 
   const handleSearch = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearch(event.target.value);
-    if (event.target.value === "") {
-      setIsQueryHaveCity(false);
-    } else {
-      setIsQueryHaveCity(true);
-    }
+   
   };
 
   const handleBankChange = (event: SelectChangeEvent) => {
@@ -120,69 +122,73 @@ export default function App() {
   };
 
   return (
-    <Grid container spacing={2} sx={{ flex: 1 }}>
-      <Grid item xs={12} sm={12} md={8} lg={8} xl={8}>
-        {atms.length > 0 ? (
-          <Map
-            atmsList={atms}
-            atm={atm}
-            setAtm={setAtm}
-            isCityFouced={isQueryHaveCity}
-            
-          />
-        ) : null}
-      </Grid>
-      <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
-        <Grid container direction="column" spacing={2}>
-          <Grid item>
-            <Search handleSearch={handleSearch} search={search} />
-          </Grid>
-          <Grid item>
-            <Grid container spacing={2}>
-              <Grid item xs={12} sm={6} md={12} lg={6} xl={6}>
-                <Filters
-                  label="כל סוגי הבנקטים"
-                  labelId="status-select-bank-type"
-                  id="select-bank-type"
-                  selectedOption={selectedBankType}
-                  selectionOptions={[
-                    "משיכת מזומן",
-                    "מכשיר מידע/או מתן הוראות",
-                    "כל סוגי הבנקטים",
-                  ]}
-                  onSelectionChange={handleBankTypeChange}
-                />
-              </Grid>
-              <Grid item xs={12} sm={6} md={12} lg={6} xl={6}>
-                <Filters
-                  label="כל הבנקים"
-                  labelId="status-select-bank-name"
-                  id="select-bank-name"
-                  selectedOption={selectedBank}
-                  selectionOptions={[
-                    'בנק אוצר החייל בע"מ',
-                    'בנק דיסקונט לישראל בע"מ',
-                    'בנק הבינלאומי הראשון לישראל בע"מ',
-                    'בנק הפועלים בע"מ',
-                    "כל הבנקים",
-                  ]}
-                  onSelectionChange={handleBankChange}
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-          <Divider />
-          <Grid
-            item
-            sx={{ height: "calc(100vh - 330px)", overflowY: "auto" }}
-            onScroll={handleScroll}
-          >
-            <Paper>
-              <ATMList atms={atmForAtmList} handleAtmClick={handleAtmClick} />
-            </Paper>
-          </Grid>
-        </Grid>
-      </Grid>
-    </Grid>
+   (
+    atms.length
+   ?  <Grid container spacing={2} sx={{ flex: 1 }}>
+         <Grid item xs={12} sm={12} md={8} lg={8} xl={8}>
+           {atms.length > 0 ? (
+             <Map
+               atmsList={atms}
+               atm={atm}
+               setAtm={setAtm}
+               isCityFouced={isQueryHaveCity}
+               
+             />
+           ) : null}
+         </Grid>
+         <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
+           <Grid container direction="column" spacing={2}>
+             <Grid item>
+               <Search handleSearch={handleSearch} search={search} />
+             </Grid>
+             <Grid item>
+               <Grid container spacing={2}>
+                 <Grid item xs={12} sm={6} md={12} lg={6} xl={6}>
+                   <Filters
+                     label="כל סוגי הבנקטים"
+                     labelId="status-select-bank-type"
+                     id="select-bank-type"
+                     selectedOption={selectedBankType}
+                     selectionOptions={[
+                       "משיכת מזומן",
+                       "מכשיר מידע/או מתן הוראות",
+                       "כל סוגי הבנקטים",
+                     ]}
+                     onSelectionChange={handleBankTypeChange}
+                   />
+                 </Grid>
+                 <Grid item xs={12} sm={6} md={12} lg={6} xl={6}>
+                   <Filters
+                     label="כל הבנקים"
+                     labelId="status-select-bank-name"
+                     id="select-bank-name"
+                     selectedOption={selectedBank}
+                     selectionOptions={[
+                       'בנק אוצר החייל בע"מ',
+                       'בנק דיסקונט לישראל בע"מ',
+                       'בנק הבינלאומי הראשון לישראל בע"מ',
+                       'בנק הפועלים בע"מ',
+                       "כל הבנקים",
+                     ]}
+                     onSelectionChange={handleBankChange}
+                   />
+                 </Grid>
+               </Grid>
+             </Grid>
+             <Divider />
+             <Grid
+               item
+               sx={{ height: "calc(100vh - 150px)", overflowY: "auto" }}
+               onScroll={handleScroll}
+             >
+               <Paper>
+                 <ATMList atms={atmForAtmList} handleAtmClick={handleAtmClick} />
+               </Paper>
+             </Grid>
+           </Grid>
+         </Grid>
+       </Grid>
+   :<Box sx={{ height:"100vh", display: 'flex', alignItems: 'center',justifyContent:"center"}}> <CircularProgress sx={{color:"#1976d2"}}/></Box>
+   )
   );
 }

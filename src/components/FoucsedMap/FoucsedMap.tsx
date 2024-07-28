@@ -5,14 +5,14 @@ import { ATM } from "../../types";
 
 interface FoucsedMapProps {
     atmsList: ATM[];
-    
+    isCityFouced: boolean;
   }
   
-  const FoucsedMap: React.FC<FoucsedMapProps> = ({ atmsList }) => {
+  const FoucsedMap: React.FC<FoucsedMapProps> = ({ atmsList,isCityFouced }) => {
     const map = useMap();
   
     useEffect(() => {
-      if (atmsList.length > 0) {
+      if (isCityFouced && atmsList.length > 0) {
         // Calculate bounds
         const latLngs = atmsList
           .filter(
@@ -27,12 +27,15 @@ interface FoucsedMapProps {
           .map((atm) => L.latLng(atm.X_Coordinate, atm.Y_Coordinate));
   
         const bounds = L.latLngBounds(latLngs);
-        map.flyToBounds(bounds, { maxZoom: 13 });
+        console.log(bounds);
+        console.log(bounds.getCenter());
+        const center = bounds.getCenter();
+        map.flyToBounds(bounds, {maxZoom: 13});
       }
-      // return () => {
-      //   map.setView([31.5, 34.75],
-      //     8);
-      // }
+      return () => {
+        map.flyTo([31.5, 34.75],
+          8);
+      }
     }, [atmsList]);
   
     return null;
