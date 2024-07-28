@@ -7,9 +7,10 @@ import L from 'leaflet';
 
 interface ATMListProps {
   atms: ATM[];
+  handleAtmClick: (atm: ATM) => void;
 }
 
-const ATMList: React.FC<ATMListProps> = ({ atms }) => {
+const ATMList: React.FC<ATMListProps> = ({ atms,handleAtmClick }) => {
 
   return (
     <List >
@@ -18,11 +19,14 @@ const ATMList: React.FC<ATMListProps> = ({ atms }) => {
         const iconUrl = atm.ATM_Type === 'משיכת מזומן' ? 'orange-pinned.png' : 'blue-pinned.png';
 
         return (
-          <Paper key={index} elevation={6} sx={{marginBottom:"10px"}}>
+          <Paper key={index} elevation={6} sx={{marginBottom:"10px",cursor:"pointer",'&:hover':{backgroundColor:"#f0f0f0"}}}>
           <ListItem key={index} >
                 <ListItemText
                   primary={atm.Bank_Name}
                   secondary={`${atm.ATM_Address} - ${atm.ATM_Type}, ${atm.City}`}
+                  onClick={() => {
+                    handleAtmClick(atm);
+                  }}
                 sx={{textAlign:"right"}}                
                 />
                 

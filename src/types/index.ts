@@ -17,8 +17,8 @@ export interface ATM {
   
 
   export interface FilterOptions {
-    ATM_Type: string;
-    Bank_Name:string;
+    ATM_Type?: string;
+    Bank_Name?:string[];
   }
   
 
