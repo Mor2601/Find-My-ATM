@@ -1,9 +1,7 @@
-import React, { useState,useContext } from "react";
-import Grid from "@mui/material/Grid";
-import Divider from "@mui/material/Divider";
-import { SelectChangeEvent } from "@mui/material/Select";
-import { BANKS_TYPES,BANKS_NAMES } from "../../constants/constants";
-import { ATM} from "../../types";
+import React, { useState, useContext } from "react";
+import { Grid, Divider, SelectChangeEvent } from "@mui/material";
+import { BANKS_TYPES, BANKS_NAMES } from "../../constants/constants";
+import { ATM } from "../../types";
 import Search from "../../components/Search/Search";
 import Filters from "../../components/Filters/Filters";
 import ATMList from "../../components/ATMList/ATMList";

@@ -39,11 +39,8 @@ const createBody = (body: Partial<RequestBody>): RequestBody => {
  * @param body 
  * @returns {ATM[]}
  */
-export const fetchData = async (body: Partial<RequestBody>): Promise<ATM[]> => {
- 
-  
+export const fetchData = async (body: Partial<RequestBody>): Promise<ATM[]> => { 
   const requestBody=createBody(body);
-  
   try {
     const response = await fetch("/api/3/action/datastore_search", {
       method: "POST",
@@ -53,7 +50,6 @@ export const fetchData = async (body: Partial<RequestBody>): Promise<ATM[]> => {
       body: JSON.stringify(requestBody),
     });
     
-
     if (!response.ok) {
       throw new Error(
         `Network response was not ok - Status: ${response.status}`
@@ -84,8 +80,6 @@ export const fetchData = async (body: Partial<RequestBody>): Promise<ATM[]> => {
  */
 const filterDuplicateAtms = (atms: ATM[], q?: string): ATM[] => {
   const seen = new Set<string>();
-  
-
   const filteredATMs = atms.filter((atm) => {
     const key = `${atm.X_Coordinate}-${atm.Y_Coordinate}-${atm.Bank_Name}-${atm.ATM_Type}`;
     if (seen.has(key)) {

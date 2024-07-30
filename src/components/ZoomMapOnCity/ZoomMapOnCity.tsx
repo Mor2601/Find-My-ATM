@@ -38,8 +38,7 @@ const ZoomMapOnCity: React.FC<ZoomMapOnCityProps> = ({ atmsList }) => {
     } catch (error) {
       console.error(error);
     } 
-    
-    
+       
   }, [atmsList]);
 
   return null;
