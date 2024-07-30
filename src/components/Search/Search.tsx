@@ -1,63 +1,61 @@
-import React, { useState } from "react";
-import { TextField, InputAdornment, InputLabel, Box } from "@mui/material";
-
+import React, {  useContext } from "react";
+import { TextField, InputAdornment } from "@mui/material";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import { StateContext } from "../Context/StateContext";
 
-interface SearchProps {
-  search: string;
-  handleSearch: (event: React.ChangeEvent<HTMLInputElement>) => void;
-}
-//TODO: Add RTL support to the search component but that lable and input will be RTL
-const Search: React.FC<SearchProps> = ({ search, handleSearch }) => {
-  const [value, setValue] = useState<string>(search);
-  const [isHebrewNotValid, setIsHebrewNotValid] = useState<boolean>(false);
-  const isHebrew = (text: string) => {
-    // Check if the text contains Hebrew characters
-    const hebrewPattern = /[\u0590-\u05FF]/;
-    return hebrewPattern.test(text);
-  };
 
+const Search: React.FC = () => {
+  const context = useContext(StateContext);
+  if (!context) {
+    throw new Error("StateContext must be used within a StateProvider");
+  }
+  const { setSearch, search } = context;
+  /**
+   * Update the search Context
+   * @param event 
+   */
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const { value } = event.target;
-    setValue(value);
-
-    // Only trigger the search handler if the input contains Hebrew characters
-    if (isHebrew(value) || value === "") {
-      setIsHebrewNotValid(false);
-      handleSearch(event);
-    } else {
-      setIsHebrewNotValid(true);
-    }
-  };
-  return (
     
+    event.preventDefault(); 
+    setSearch(event.target.value);
+  };
+
+  
+
+  return (
+    <form >
     <TextField
       id="outlined-basic"
-      sx={{ 
+      sx={{
         marginTop: "10px",
-        // direction: "rtl",
-        
-        // "& label": { direction: "rtl" }, // Set label direction to RTL
-        // "& legend": { direction: "rtl" } // Set legend direction to RTL
+        direction: "rtl",
       }}
-      label="חיפוש לפי עיר"
-      
+      placeholder="חיפוש לפי עיר"
       variant="outlined"
       fullWidth
-      value={value}
+      value={search}
       onChange={handleInputChange}
-      error={isHebrewNotValid && value.length > 0}
-      helperText={isHebrewNotValid && value.length > 0 ? "הכנס ערך בעברית" : ""}
       slotProps={{
         input: {
-          endAdornment: (
-            <InputAdornment position="end">
+          startAdornment: (
+            <InputAdornment position="start">
               <SearchRoundedIcon sx={{ color: "black" }} />
             </InputAdornment>
           ),
         },
+        inputLabel: {
+          sx: {
+            direction: "rtl",
+            textAlign: "right",
+            right: 0,
+            left: "auto",
+            transformOrigin: "top right",
+          },
+        },
       }}
     />
+    </form>
   );
 };
+
 export default Search;

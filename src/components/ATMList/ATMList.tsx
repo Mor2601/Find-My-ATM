@@ -1,21 +1,82 @@
-import React from 'react';
-import { List, ListItem, ListItemText, ListItemIcon,Paper } from '@mui/material';
-import { Circle } from '@mui/icons-material';
+import React, { useState, useRef, useEffect } from 'react';
+import { Grid, List, ListItem, ListItemText, ListItemIcon, CircularProgress, Paper } from '@mui/material';
 import { ATM } from '../../types';
-import L from 'leaflet';
-
 
 interface ATMListProps {
   atms: ATM[];
   handleAtmClick: (atm: ATM) => void;
 }
 
-const ATMList: React.FC<ATMListProps> = ({ atms,handleAtmClick }) => {
+const PAGE_SIZE = 50;
+const ATMS_ON_SCREEN = 10;
+const ATMList: React.FC<ATMListProps> = ({ atms, handleAtmClick }) => {
+  const [atmForAtmList, setAtmForAtmList] = useState<ATM[]>([]);
+  const [loading, setLoading] = useState<boolean>(false);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+  const [hasPrevious, setHasPrevious] = useState<boolean>(false);
+  const paperRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    paperRef.current?.scrollTo(0, 0);
+    setAtmForAtmList(atms.slice(0, PAGE_SIZE));
+    setHasMore(atms.length > PAGE_SIZE);
+    setHasPrevious(false);
+  }, [atms]);
+/**
+ * Virtualized list to handle the scroll and load more data
+ */
+  const fetchMoreData =() => {
+    setLoading(true);
+    setAtmForAtmList((prevData) => {
+      const nextPageData = atms.slice(
+        prevData.length,
+        prevData.length + PAGE_SIZE
+      );
+      if (nextPageData.length < PAGE_SIZE) setHasMore(false);
+      setLoading(false);
+      return [...prevData, ...nextPageData];
+    });
+  }
+  /**
+   * Virtualized list to handle the scroll and load previous data
+   */
+  const fetchPreviousData =() => {
+    setLoading(true);
+    setAtmForAtmList((prevData) => {
+      const previousPageStart = Math.max(prevData.length - PAGE_SIZE, 0);
+      const previousPageData = atms.slice(
+        previousPageStart,
+        prevData.length - PAGE_SIZE
+      );
+      if (previousPageStart === 0) setHasPrevious(false);
+      setLoading(false);
+      return [...previousPageData, ...prevData];
+    });
+  }
+  /**
+   * Listener to handle the scroll event and load more data or previous data
+   * @param e 
+   */
+  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
+    const { scrollTop, scrollHeight, clientHeight } = e.currentTarget;
+    if (scrollTop + clientHeight >= scrollHeight - ATMS_ON_SCREEN && hasMore && !loading) {
+      fetchMoreData();
+    }
+    if (scrollTop === 0 && hasPrevious && !loading) {
+      fetchPreviousData();
+    }
+  };
 
   return (
-    <List >
-      {atms.map((atm, index) => {
-        // Determine color based on ATM type
+    <Grid
+      item
+      sx={{ height: 'calc(100vh - 150px)', overflowY: 'auto' }}
+      onScroll={handleScroll}
+      ref={paperRef}
+    >
+       <List >
+      {atmForAtmList.map((atm, index) => {
+       
         const iconUrl = atm.ATM_Type === 'משיכת מזומן' ? 'orange-pinned.png' : 'blue-pinned.png';
 
         return (
@@ -23,7 +84,7 @@ const ATMList: React.FC<ATMListProps> = ({ atms,handleAtmClick }) => {
           <ListItem key={index} >
                 <ListItemText
                   primary={atm.Bank_Name}
-                  secondary={`${atm.ATM_Address} - ${atm.ATM_Type}, ${atm.City}`}
+                  secondary={`${atm.ATM_Address} ${atm.City} | ${atm.ATM_Type}`}
                   onClick={() => {
                     handleAtmClick(atm);
                   }}
@@ -43,6 +104,9 @@ const ATMList: React.FC<ATMListProps> = ({ atms,handleAtmClick }) => {
         );
       })}
     </List>
+      {loading && <CircularProgress />}
+    </Grid>
   );
 };
+
 export default ATMList;

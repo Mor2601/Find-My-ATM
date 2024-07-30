@@ -1,45 +1,49 @@
-import { ATM, FilterOptions, RequestBody } from '../types';
-import { isATM } from '../types/typeGuards';
-
-const defaultBankNames = [
-  "בנק אוצר החייל בע\"מ",
-  "בנק דיסקונט לישראל בע\"מ",
-  "בנק הבינלאומי הראשון לישראל בע\"מ",
-  "בנק הפועלים בע\"מ"
-];
+import { ATM, FilterOptions, RequestBody } from "../types";
+import { isATM } from "../types/typeGuards";
+import { BANKS_NAMES } from "../constants/constants";
 
 /**
- * fetch all the ATMs from the API
+ * Create the body for the request to the API
+ * @param body 
+ * @returns only the feild that been specified
  */
-export const fetchData = async (
-  q?: string,
-  limit?: number,
-  offset?: number,
-  filters?: Partial<FilterOptions>,
-  name?: string
-): Promise<ATM[]> => {
-  const time = new Date().getTime();
-  const resource_id = "b9d690de-0a9c-45ef-9ced-3e5957776b26";
-  const requestBody: RequestBody = { resource_id };
-
-  if (q) requestBody.q = q;
-  if (limit !== undefined) requestBody.limit = limit;
-  if (offset !== undefined) requestBody.offset = offset;
-
-  if (filters) {
-    const validFilters: Partial<FilterOptions> = {};
-    if (filters.ATM_Type) validFilters.ATM_Type = filters.ATM_Type;
-    if (filters.Bank_Name) {
-      validFilters.Bank_Name = filters.Bank_Name;
-    } else {
-      validFilters.Bank_Name = defaultBankNames;
+const createBody = (body: Partial<RequestBody>): RequestBody => {
+  const validFilters: Partial<FilterOptions> = {};
+  const bodyRequest: RequestBody = { resource_id: "b9d690de-0a9c-45ef-9ced-3e5957776b26" };
+  if (body.q) bodyRequest.q = body.q;
+  if (body.limit!==undefined) bodyRequest.limit = body.limit;
+  if (body.offset!==undefined) bodyRequest.offset = body.offset;
+  if (body.filters) {
+    if (body.filters.ATM_Type && body.filters.ATM_Type !== "כל סוגי הבנקטים") {
+      validFilters.ATM_Type = body.filters.ATM_Type;
     }
-
-    requestBody.filters = validFilters as FilterOptions;
+    if (
+      body.filters.Bank_Name &&
+      !body.filters.Bank_Name.includes("כל הבנקים") && !body.filters.Bank_Name.includes("")
+    ) {
+      validFilters.Bank_Name = body.filters.Bank_Name;
+    } else {
+      validFilters.Bank_Name = BANKS_NAMES;
+    }
   } else {
-    requestBody.filters = { Bank_Name: defaultBankNames };
+    validFilters.Bank_Name = BANKS_NAMES;
   }
+  bodyRequest.filters = validFilters as FilterOptions;
+  return bodyRequest;
+  
+ 
+};
 
+/**
+ * Fetch ATMS from the API
+ * @param body 
+ * @returns {ATM[]}
+ */
+export const fetchData = async (body: Partial<RequestBody>): Promise<ATM[]> => {
+ 
+  
+  const requestBody=createBody(body);
+  
   try {
     const response = await fetch("/api/3/action/datastore_search", {
       method: "POST",
@@ -48,16 +52,19 @@ export const fetchData = async (
       },
       body: JSON.stringify(requestBody),
     });
-    console.log(`fetchData for ${name} took: ${new Date().getTime() - time}`);
+    
 
     if (!response.ok) {
-      throw new Error(`Network response was not ok - Status: ${response.status}`);
+      throw new Error(
+        `Network response was not ok - Status: ${response.status}`
+      );
     }
 
     const data = await response.json();
 
     if (data.result.records.every((record: any) => isATM(record))) {
-      return filterDuplicateAtms(data.result.records as ATM[]);
+      const uniqueAtms = filterDuplicateAtms(data.result.records as ATM[], body.q);
+      return uniqueAtms
     } else {
       throw new Error("Invalid data format");
     }
@@ -68,17 +75,31 @@ export const fetchData = async (
 };
 
 /**
- * Filter out duplicate ATMs based on the same coordinates and bank name.
+ * Filter duplicate ATMs.
+ * If there is ATMS with the same coordinates, bank name and ATM type, only one of them will be shown.
+ * it will return only the ATMs that include the q value in the City attribute
+ * @param atms 
+ * @param q 
+ * @returns {ATM[]}
  */
-const filterDuplicateAtms = (atms: ATM[]): ATM[] => {
+const filterDuplicateAtms = (atms: ATM[], q?: string): ATM[] => {
   const seen = new Set<string>();
-  return atms.filter((atm) => {
+  
+
+  const filteredATMs = atms.filter((atm) => {
     const key = `${atm.X_Coordinate}-${atm.Y_Coordinate}-${atm.Bank_Name}-${atm.ATM_Type}`;
     if (seen.has(key)) {
       return false;
     } else {
       seen.add(key);
-      return true;
+      // Check if City attribute includes part of the q value
+      if (!q || (atm.City && atm.City.includes(q))) {
+        
+        return true;
+      }
+      return false;
     }
   });
+
+  return filteredATMs;
 };

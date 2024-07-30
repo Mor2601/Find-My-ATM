@@ -1,43 +1,25 @@
-// Remove the duplicate import statement
-import { useMemo, Component } from "react";
+import { useMemo } from "react";
 import { ATM } from "../../types";
-import L from "leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import {
-    MapContainer,
-    Marker,
-    Popup,
-    TileLayer,
-    useMap,
-    useMapEvents,
-    LayerGroup,
-  } from "react-leaflet";
+  Marker,
+  Popup
+} from "react-leaflet";
+import { isInIsraelBounds, createMarkerIcons } from "../../utils/utils";
 interface MarkerClusterProps {
     atmsList: ATM[];
   }
 
-
-
-const withdrawalIcon = new L.Icon({
-  iconUrl: "./orange-pinned.png",
-  iconSize: [28, 28],
-});
-const informationIcon = new L.Icon({
-  iconUrl: "./blue-pinned.png",
-  iconSize: [28, 28],
-});
-
 const MarkerCluster: React.FC<MarkerClusterProps> = ({ atmsList }) => {
+  const { withdrawalIcon, informationIcon } = createMarkerIcons();
+  /**
+   * Momoized the markers to prevent re-rendering since there lots of markers 
+   */
     const markers = useMemo(() => {
       return atmsList
         .filter(
           (atm) =>
-            atm.X_Coordinate !== null &&
-            atm.Y_Coordinate !== null &&
-            atm.X_Coordinate >= 29.5 &&
-            atm.X_Coordinate <= 33.5 &&
-            atm.Y_Coordinate >= 34.25 &&
-            atm.Y_Coordinate <= 35.9
+            isInIsraelBounds(atm)
         )
         .map((atm) => (
           <Marker
@@ -47,8 +29,11 @@ const MarkerCluster: React.FC<MarkerClusterProps> = ({ atmsList }) => {
               atm.ATM_Type === "משיכת מזומן" ? withdrawalIcon : informationIcon
             }
           >
-            <Popup>
-              {`${atm.Bank_Name} - City Name: ${atm.City}, Address: ${atm.ATM_Address} atmType: ${atm.ATM_Type}`}
+            <Popup >
+            <strong >{atm.Bank_Name}</strong>
+            <br/>
+          {atm.ATM_Address}
+          {atm.City} | {atm.ATM_Type}
             </Popup>
           </Marker>
         ));
@@ -58,3 +43,5 @@ const MarkerCluster: React.FC<MarkerClusterProps> = ({ atmsList }) => {
   };
 
 export default MarkerCluster;
+
+

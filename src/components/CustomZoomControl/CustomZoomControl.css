@@ -1,0 +1,22 @@
+/* customButton.css */
+.leaflet-control-custom-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 30px; 
+    height: 30px; 
+    background-color: white; 
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); 
+  }
+  
+  .leaflet-control-custom-button svg {
+    width: 24px;
+    height: 24px;
+  }
+  .leaflet-control-zoom {
+    opacity: 0.6; 
+
+  }

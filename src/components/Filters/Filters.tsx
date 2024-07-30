@@ -1,10 +1,8 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
-
 
 interface FiltersProps {
   selectionOptions: string[];
@@ -15,7 +13,6 @@ interface FiltersProps {
   labelId: string;
   id: string;
 }
-//TODO:add defualt value instead of label
 const Filters: React.FC<FiltersProps> = ({
   selectedOption,
   selectionOptions,

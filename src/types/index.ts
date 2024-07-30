@@ -20,25 +20,7 @@ export interface ATM {
     ATM_Type?: string;
     Bank_Name?:string[];
   }
-  
 
-  export interface SearchQuery {
-    cityName: string; // City name in Hebrew
-    atmType?: 'משיכת מזומן' | 'מכשיר מידע/ואו מתן הוראות'; // Optional
-    bankName?: string; // Optional
-  }
-  
- 
-  export interface Geolocation {
-    latitude: number;
-    longitude: number;
-  }
-  
-  
-  export interface MapBounds {
-    northEast: Geolocation;
-    southWest: Geolocation;
-  }
   export interface RequestBody {
     resource_id: string;
     q?: string;

@@ -1,39 +1,51 @@
-# Material UI - Vite.js in TypeScript example
+```markdown
+# Find My ATM
 
-## How to use
+This project is a web application built with React, TypeScript, and Vite. It helps users find ATMs in Israel using location-based and search functionalities, leveraging the [Government API](https://data.gov.il/he/dataset/automated-devices/resource/b9d690de-0a9c-45ef-9ced-3e5957776b26).
 
-Download the example [or clone the repo](https://github.com/mui/material-ui):
+## Features
 
-<!-- #default-branch-switch -->
+- **ATM Location Mapping**: View ATMs on a map based on user location and search criteria.
+- **Search and Filter**: Find ATMs by city name in Hebrew or filter them by type and bank name.
+- **Current Location**: Automatically focus on the user's current location or request location access if needed.
+- **Responsive Design**: Seamlessly use the application on both desktop and mobile devices with a responsive design.
 
-```bash
-curl https://codeload.github.com/mui/material-ui/tar.gz/next | tar -xz --strip=2 material-ui-next/examples/material-ui-vite-ts
-cd material-ui-vite-ts
+## Technologies
+
+- **React**: For building the user interface.
+- **TypeScript**: For adding static type definitions to JavaScript.
+- **Vite**: For fast development and build tooling.
+- **Material UI**: For styled components and icons.
+- **Leaflet.js**: For interactive mapping and geolocation features.
+
+## Getting Started
+
+To run this project locally, follow these steps:
+
+1. **Clone the repository**:
+
+   ```sh
+   git clone https://github.com/Mor2601/Find-My-ATM.git
+   ```
+
+2. **Install dependencies**:
+
+   ```sh
+   npm install
+   ```
+
+3. **Start the development server**:
+
+   ```sh
+   npm run dev
+   ```
+
+   The application will be available at [http://localhost:5173](http://localhost:5173).
+
+## Building for Production
+
+To create a production build, run:
+
+```sh
+npm run build
 ```
-
-Install it and run:
-
-```bash
-npm install
-npm run dev
-```
-
-or:
-
-<!-- #default-branch-switch -->
-
-[![Edit on StackBlitz](https://developer.stackblitz.com/img/open_in_stackblitz.svg)](https://stackblitz.com/github/mui/material-ui/tree/next/examples/material-ui-vite-ts)
-
-[![Edit on CodeSandbox](https://codesandbox.io/static/img/play-codesandbox.svg)](https://codesandbox.io/p/sandbox/github/mui/material-ui/tree/next/examples/material-ui-vite-ts)
-
-## The idea behind the example
-
-This example uses [Vite.js](https://github.com/vitejs/vite).
-It includes `@mui/material` and its peer dependencies, including [Emotion](https://emotion.sh/docs/introduction), the default style engine in Material UI v5.
-
-## What's next?
-
-<!-- #default-branch-switch -->
-
-You now have a working example project.
-You can head back to the documentation and continue by browsing the [templates](https://next.mui.com/material-ui/getting-started/templates/) section.

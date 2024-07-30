@@ -1,31 +1,40 @@
 import { useState, useEffect } from 'react';
 import { fetchData } from '../services/api';
-import { ATM } from '../types';
-import { isValidUrl } from '../types/typeGuards';
+import { ATM,RequestBody } from '../types';
+
 
 interface UseFetchResult {
     data: ATM[] | null;
     error: string | null;
     loading: boolean;
+    queryHaveCity: boolean;
   }
 /**
-
+ * Custom hook to fetch ATMS from the API base on the request body
+ *
  * @param request 
- * @returns {ATM[]} - Array ATMS.
+ * @returns 
  */
-const useFetch = (request: string): UseFetchResult => {
+const useFetch = (request: Partial<RequestBody>): UseFetchResult => {
     const [data, setData] = useState<ATM[] | null>(null);
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
+    const [queryHaveCity, setQueryHaveCity] = useState<boolean>(false);
 
   useEffect(() => {
-   
-    // if(isValidUrl(request)){
+    
+    
     const fetchDataAsync = async () => {
-      try {
+      try {  
+        setLoading(true);    
         const result = await fetchData(request);
-        
-        console.log(result);
+        setData(result as ATM[]);
+        if (request.q && request.q!=="") {
+          
+          setQueryHaveCity(true);
+        } else {
+          setQueryHaveCity(false);
+        }
       } catch (err) {
         if (err instanceof Error) {
           setError(err.message);
@@ -35,14 +44,13 @@ const useFetch = (request: string): UseFetchResult => {
       } finally {
         setLoading(false);
       }
-    // };
-  
-
+    }
+      
     fetchDataAsync();
-  }
-  }, []);
+  
+  }, [request]);
 
-  return { data, error, loading };
+  return { data, error, loading, queryHaveCity };
 };
 
 export default useFetch;

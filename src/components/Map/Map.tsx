@@ -1,51 +1,36 @@
-import React, { useEffect, useMemo,useRef,useState } from "react";
-import {
-  MapContainer,
-  Marker,
-  Popup,
-  TileLayer,
-  useMap,
-  useMapEvents,
-  LayerGroup,
-} from "react-leaflet";
-import L from "leaflet";
-import MarkerClusterGroup from "react-leaflet-cluster";
+import React from "react";
+import { MapContainer, TileLayer } from "react-leaflet";
 import { ATM } from "./../../types";
-import { map, set } from "lodash";
 import MarkerCluster from "../MarkerCluster/MarkerCluster";
 import CustomZoomControl from "../CustomZoomControl/CustomZoomControl";
-import FoucsedMapOnAtm from "../FoucsedMapOnAtm/FoucsedMapOnAtm";
-import FoucsedMap from "../FoucsedMap/FoucsedMap";
-import { Box, CircularProgress } from "@mui/material";
+import ZoomMapOnAtm from "../ZoomMapOnAtm/ZoomMapOnAtm";
+import ZoomMapOnCity from "../ZoomMapOnCity/ZoomMapOnCity";
+import { MAP_ZOOM, ISRAEL_CENTER } from "../../constants/constants";
+import UserLocation from "../UserLocationMarker/UserLocationMarker";
 interface MapProps {
   atmsList: ATM[];
-  atm: ATM | null;
-  setAtm: (atm: ATM | null) => void;
-  
-  isCityFouced: boolean;
+  selectedAtm: ATM | null;
+  setSelectedAtm: (atm: ATM | null) => void;
 }
-
-const Map: React.FC<MapProps> = ({ atmsList, atm,setAtm,isCityFouced }) => {
-
+const ATTRIBUTION =
+  '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
+const URL = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
+const Map: React.FC<MapProps> = ({ atmsList, selectedAtm, setSelectedAtm }) => {
   return (
     <MapContainer
-      center={[31.5, 34.75]}
-      zoom={8}
+      center={[ISRAEL_CENTER[0], ISRAEL_CENTER[1]]}
+      zoom={MAP_ZOOM}
       style={{ height: "100vh", width: "100%" }}
-      
     >
-      <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-       
-      />
-      {/* {atm? (<FoucsedMapOnAtm atm={atm}/>):(<FoucsedMap atmsList={atmsList}/>)} */}
-      {atm ? <FoucsedMapOnAtm atm={atm} setAtm={setAtm} /> : <MarkerCluster atmsList={atmsList} />}
+      <TileLayer attribution={ATTRIBUTION} url={URL} />
       <CustomZoomControl />
-      {/* {isCityFouced ? <FoucsedMap atmsList={atmsList}  />:null} */}
-      
-      <FoucsedMap atmsList={atmsList} isCityFouced={isCityFouced} />
-      {/* <MarkerCluster atmsList={atmsList} /> */}
+      <UserLocation />
+      {selectedAtm ? (
+        <ZoomMapOnAtm atm={selectedAtm} setAtm={setSelectedAtm} />
+      ) : (
+        <MarkerCluster atmsList={atmsList} />
+      )}
+      <ZoomMapOnCity atmsList={atmsList} />
     </MapContainer>
   );
 };
