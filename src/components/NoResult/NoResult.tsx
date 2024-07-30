@@ -8,7 +8,7 @@ export const NoResult: React.FC = () => {
         display: "flex",
         justifyContent: "center",
         alignItems: "center",
-        height: "53vh",
+        height: "100vh",
         width: "100%",
         boxSizing: "border-box",
         padding: 2,
