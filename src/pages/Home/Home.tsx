@@ -48,39 +48,41 @@ const Home: React.FC = () => {
   };
   return (
     
-    <Grid container spacing={2} sx={{ flex: 1 }}>
-      <Grid item xs={12} sm={12} md={8} lg={8} xl={8}>
+     <Grid container spacing={2} sx={{ flex: 1 }}>
+      
+      <Grid item xs={12} md={8} sx={{ height: { xs: "50vh", md: "100vh" }, width: "100%" }}>
         {atms.length > 0 ? (
           <Map
             atmsList={atms}
             selectedAtm={selectedAtm}
             setSelectedAtm={setSelectedAtm}
-            
           />
         ) : (
-          <NoResult/>
+          <NoResult />
         )}
       </Grid>
-      <Grid item xs={12} sm={12} md={4} lg={4} xl={4}>
+
+     
+      <Grid item xs={12} md={4} sx={{ display: { xs: 'none', md: 'block' } }}>
         <Grid container direction="column" spacing={2}>
           <Grid item>
-            <Search  />
+            <Search />
           </Grid>
           <Grid item>
             <Grid container spacing={2}>
-              <Grid item xs={12} sm={6} md={12} lg={6} xl={6}>
+              <Grid item xs={12} sm={6}>
                 <Filters
-                  label="כל סוגי הבנקטים"
-                  labelId="status-select-bank-type"
-                  id="select-bank-type"
-                  selectedOption={
-                    selectedBankType ? selectedBankType : "כל סוגי הבנקטים"
-                  }
-                  selectionOptions={BANKS_TYPES}
-                  onSelectionChange={handleBankTypeChange}
+            label="כל סוגי הבנקטים"
+            labelId="status-select-bank-type"
+            id="select-bank-type"
+            selectedOption={
+              selectedBankType ? selectedBankType : "כל סוגי הבנקטים"
+            }
+            selectionOptions={BANKS_TYPES}
+            onSelectionChange={handleBankTypeChange}
                 />
               </Grid>
-              <Grid item xs={12} sm={6} md={12} lg={6} xl={6}>
+              <Grid item xs={12} sm={6}>
                 <Filters
                   label="כל הבנקים"
                   labelId="status-select-bank-name"

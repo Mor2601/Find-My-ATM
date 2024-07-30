@@ -7,6 +7,7 @@ import ZoomMapOnAtm from "../ZoomMapOnAtm/ZoomMapOnAtm";
 import ZoomMapOnCity from "../ZoomMapOnCity/ZoomMapOnCity";
 import { MAP_ZOOM, ISRAEL_CENTER } from "../../constants/constants";
 import UserLocation from "../UserLocationMarker/UserLocationMarker";
+import { useMediaQuery } from "@mui/material";
 interface MapProps {
   atmsList: ATM[];
   selectedAtm: ATM | null;
@@ -16,11 +17,17 @@ const ATTRIBUTION =
   '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors';
 const URL = "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png";
 const Map: React.FC<MapProps> = ({ atmsList, selectedAtm, setSelectedAtm }) => {
+  const isMobile = useMediaQuery("(max-width:600px)");
+  
   return (
     <MapContainer
       center={[ISRAEL_CENTER[0], ISRAEL_CENTER[1]]}
       zoom={MAP_ZOOM}
-      style={{ height: "100vh", width: "100%" }}
+      style={{
+        height: isMobile ? "50vh" : "100vh", 
+        width: "100%",
+        position: "relative", 
+      }}
     >
       <TileLayer attribution={ATTRIBUTION} url={URL} />
       <CustomZoomControl />

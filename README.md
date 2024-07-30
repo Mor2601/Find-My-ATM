@@ -7,7 +7,7 @@ This project is a web application built with React, TypeScript, and Vite. It hel
 - **ATM Location Mapping**: View ATMs on a map based on user location and search criteria.
 - **Search and Filter**: Find ATMs by city name in Hebrew or filter them by type and bank name.
 - **Current Location**: Automatically focus on the user's current location or request location access if needed.
-
+- **Responsive Design**: Seamlessly use the application on both desktop and Tablet devices with a responsive design.
 
 ## Technologies
 
