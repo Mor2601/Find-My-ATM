@@ -14,10 +14,10 @@ const ATMList: React.FC<ATMListProps> = ({ atms, handleAtmClick }) => {
   const [loading, setLoading] = useState<boolean>(false);
   const [hasMore, setHasMore] = useState<boolean>(true);
   const [hasPrevious, setHasPrevious] = useState<boolean>(false);
-  const paperRef = useRef<HTMLDivElement>(null);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    paperRef.current?.scrollTo(0, 0);
+    gridRef.current?.scrollTo(0, 0);
     setAtmForAtmList(atms.slice(0, PAGE_SIZE));
     setHasMore(atms.length > PAGE_SIZE);
     setHasPrevious(false);
@@ -72,7 +72,7 @@ const ATMList: React.FC<ATMListProps> = ({ atms, handleAtmClick }) => {
       item
       sx={{ height: 'calc(100vh - 150px)', overflowY: 'auto' }}
       onScroll={handleScroll}
-      ref={paperRef}
+      ref={gridRef}
     >
        <List >
       {atmForAtmList.map((atm, index) => {
