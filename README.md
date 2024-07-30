@@ -1,4 +1,3 @@
-```markdown
 # Find My ATM
 
 This project is a web application built with React, TypeScript, and Vite. It helps users find ATMs in Israel using location-based and search functionalities, leveraging the [Government API](https://data.gov.il/he/dataset/automated-devices/resource/b9d690de-0a9c-45ef-9ced-3e5957776b26).
