@@ -8,7 +8,7 @@ import {
   ISRAEL_CENTER,
   MAP_ZOOM,
 } from "../../constants/constants";
-import { StateContext } from "../Context/StateContext";
+import { StateContext } from "../../context/StateContext";
 interface ZoomMapOnCityProps {
   atmsList: ATM[];
 }

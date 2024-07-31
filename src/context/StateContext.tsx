@@ -1,6 +1,6 @@
 import React, { createContext, useState, ReactNode } from 'react';
-import { ATM } from '../../types';
-import useDebounce from '../../hooks/useDebounce';
+import { ATM } from '../types';
+import useDebounce from '../hooks/useDebounce';
 
 interface StateContextProps {
   atms: ATM[];
