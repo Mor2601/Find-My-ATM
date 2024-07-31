@@ -18,7 +18,7 @@ interface StateContextProps {
     debouncedSearch: string;
 }
 /**
- * Context Manager to manage the state of the application
+ * Context Manager to manage the state of the application 
  * this Manager will use the React Context API to share the state and update them between components
  */
 export const StateContext = createContext<StateContextProps | undefined>(undefined);
