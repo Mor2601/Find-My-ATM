@@ -9,7 +9,6 @@ interface FiltersProps {
   selectedOption: string;
   onSelectionChange: (event: SelectChangeEvent) => void;
   sx?: React.CSSProperties;
-  label: string;
   labelId: string;
   id: string;
 }
@@ -18,25 +17,18 @@ const Filters: React.FC<FiltersProps> = ({
   selectionOptions,
   onSelectionChange,
   sx,
-  label,
   labelId,
   id,
 }) => {
-
   return (
     <Box sx={sx}>
-      <FormControl fullWidth  >
-        {/* <InputLabel id={labelId} >{label}</InputLabel> */}
+      <FormControl fullWidth>
         <Select
           labelId={labelId}
           id={id}
           value={selectedOption}
-          // label={label}
           onChange={onSelectionChange}
-          
-          
         >
-          
           {selectionOptions.map((option) => (
             <MenuItem key={option} value={option}>
               {option}

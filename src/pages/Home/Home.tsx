@@ -70,7 +70,6 @@ const Home: React.FC = () => {
             <Grid container spacing={2}>
               <Grid item xs={12} sm={6}>
                 <Filters
-            label="כל סוגי הבנקטים"
             labelId="status-select-bank-type"
             id="select-bank-type"
             selectedOption={
@@ -82,7 +81,6 @@ const Home: React.FC = () => {
               </Grid>
               <Grid item xs={12} sm={6}>
                 <Filters
-                  label="כל הבנקים"
                   labelId="status-select-bank-name"
                   id="select-bank-name"
                   selectedOption={selectedBank ? selectedBank : "כל הבנקים"}
