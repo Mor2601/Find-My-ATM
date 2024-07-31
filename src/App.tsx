@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from "react";
 import { FilterOptions, RequestBody } from "./types";
 import Home from "./pages/Home/Home";
 import useFetch from "./hooks/useFetch";
-import { StateContext } from "./context/StateContext";
+import { StateContext } from "./context/stateContext";
 import Loading from "./components/Loading/Loading";
 
 export default function App() {

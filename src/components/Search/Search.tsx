@@ -1,7 +1,7 @@
 import React, {  useContext } from "react";
 import { TextField, InputAdornment } from "@mui/material";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import { StateContext } from "../../context/StateContext";
+import { StateContext } from "../../context/stateContext";
 
 
 const Search: React.FC = () => {

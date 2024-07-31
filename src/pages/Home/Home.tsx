@@ -6,7 +6,7 @@ import Search from "../../components/Search/Search";
 import Filters from "../../components/Filters/Filters";
 import ATMList from "../../components/ATMList/ATMList";
 import Map from "../../components/Map/Map";
-import { StateContext } from "../../context/StateContext";
+import { StateContext } from "../../context/stateContext";
 import NoResult from "../../components/NoResult/NoResult";
 const Home: React.FC = () => {
   const context = useContext(StateContext);
